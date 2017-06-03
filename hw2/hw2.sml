@@ -8,14 +8,15 @@ fun same_string(s1 : string, s2 : string) =
 
 (* put your solutions for problem 1 here *)
 fun all_except_option(except, xs) =
-    let 
-        fun helper(left, right) =
-            case right of
-                [] => NONE
-              | x :: xs => if same_string(x, except) then SOME(left @ xs) else helper(x :: left, xs) 
-    in
-        helper([], xs)   
-    end
+    case xs of
+        [] => NONE
+      | x :: xs' =>
+            if same_string(x, except)
+            then SOME xs' 
+            else 
+                case all_except_option(except, xs') of
+                    NONE => NONE
+                 |  SOME xs'' => SOME(x :: xs'')
 
 fun get_substitutions1(xss, tag) =
     case xss of 
@@ -47,7 +48,7 @@ fun similar_names(xss, {first, middle, last}) =
     in
         helper([{first=first, middle=middle, last=last}], get_substitutions2(xss, first))
     end      
-
+        
        
 (* you may assume that Num is always used with values 2, 3, ..., 10
    though it will not really come up *)
@@ -75,17 +76,12 @@ fun card_value(card) =
       |  _ => 10 
 
 fun remove_card(cards, card_to_remove, exc) =
-    let 
-        fun helper(cards, acc) =  
-            case cards of
-                [] => raise exc
-              | c :: cards' => 
-                    if c = card_to_remove
-                    then acc @ cards'
-                    else helper(cards', c :: acc)
-    in 
-        helper(cards, []) 
-    end 
+    case cards of
+        [] => raise exc
+      | card :: cards' => 
+            if card = card_to_remove
+            then cards'
+            else card :: remove_card(cards', card_to_remove, exc)   
 
 fun all_same_color(cards) = 
     case cards of 
@@ -144,7 +140,7 @@ fun officiate(cards, moves, goal) =
                 ([], _) => score(held_cards, goal)
              |  (Draw :: _, []) => score(held_cards, goal) 
              |  (Draw :: moves', card :: cards') =>
-                    if sum_cards(held_cards) > goal
+                    if sum_cards(card :: held_cards) > goal
                     then score(card :: held_cards, goal)
                     else helper(cards', card :: held_cards, moves')
              |  (Discard card :: moves', _) => helper(cards, remove_card(held_cards, card, IllegalMove), moves')  
