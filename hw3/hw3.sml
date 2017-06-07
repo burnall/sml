@@ -107,7 +107,7 @@ val check_pat = let
 	        | TupleP ps => List.foldl (fn (p, vs) => vs @ (scan_variables p)) [] ps
 	        | ConstructorP(_, p) => scan_variables p
 	        | _ => []
-        fun all_distinct xs = 
+        fun all_distinct (xs: string list) = 
             #1 (foldl
                 (fn (s, (ok, xs)) => (ok andalso not (List.exists (fn i => i = s) xs), s ::xs))
                 (true, [])
