@@ -30,5 +30,6 @@ val test9c = count_some_var ("x", Variable("x")) = 1
 val test10 = check_pat (Variable("x")) = true
 
 val test11 = match (Const(1), UnitP) = NONE
-
+(*
 val test12 = first_match Unit [UnitP] = SOME []
+*)
