@@ -1,5 +1,5 @@
-fun only_capitals xs = 
-    List.filter (fn x => Char.isUpper(String.sub(x, 0))) xs
+val only_capitals = 
+    List.filter (fn x => Char.isUpper(String.sub(x, 0)))
 
 fun longest_string1 xs =
     #2 (foldl (fn (x, (len, s)) => 
@@ -31,8 +31,8 @@ fun longest_string_helper f xs =
           else (len, s)
       end) (0, "") xs)
 
-val longest_string3 = longest_string_helper (fn (x, y) => x > y)
-val longest_string4 = longest_string_helper (fn (x, y) => x >= y)
+val longest_string3 = longest_string_helper op>
+val longest_string4 = longest_string_helper op>=
 
 val longest_capitalized = longest_string1 o only_capitals
 
@@ -81,9 +81,9 @@ fun g f1 f2 p =
 	  | _ => 0
     end
 
-val count_wildcards = g (fn () => 1) (fn x => 0)
+val count_wildcards = g (fn () => 1) (fn _  => 0)
 
-val count_wild_and_variable_lengths = g (fn () => 1) (fn x => String.size x)
+val count_wild_and_variable_lengths = g (fn () => 1) String.size
 
 fun count_some_var (v, p) = 
     g (fn () => 0) (fn x => if v = x then 1 else 0) p  
